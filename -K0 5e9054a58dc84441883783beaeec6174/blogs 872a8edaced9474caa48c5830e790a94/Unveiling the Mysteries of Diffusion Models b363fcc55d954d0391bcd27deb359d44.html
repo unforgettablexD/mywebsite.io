@@ -1,0 +1,686 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Unveiling the Mysteries of Diffusion Models</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(249, 228, 188, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="b363fcc5-5d95-4d03-91bc-d27deb359d44" class="page sans"><header><img class="page-cover-image" src="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%206.png" style="object-position:center 41.449999999999996%"/><h1 class="page-title"><strong><strong>Unveiling the Mysteries of Diffusion Models</strong></strong></h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-select"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>Type</th><td><span class="selected-value select-value-color-blue">Gen AI</span></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesText"><path d="M1.56738 3.25879H14.4258C14.7676 3.25879 15.0479 2.97852 15.0479 2.63672C15.0479 2.29492 14.7744 2.02148 14.4258 2.02148H1.56738C1.21875 2.02148 0.952148 2.29492 0.952148 2.63672C0.952148 2.97852 1.22559 3.25879 1.56738 3.25879ZM1.56738 6.84082H14.4258C14.7676 6.84082 15.0479 6.56055 15.0479 6.21875C15.0479 5.87695 14.7744 5.60352 14.4258 5.60352H1.56738C1.21875 5.60352 0.952148 5.87695 0.952148 6.21875C0.952148 6.56055 1.22559 6.84082 1.56738 6.84082ZM1.56738 10.4229H14.4258C14.7676 10.4229 15.0479 10.1426 15.0479 9.80078C15.0479 9.45898 14.7744 9.18555 14.4258 9.18555H1.56738C1.21875 9.18555 0.952148 9.45898 0.952148 9.80078C0.952148 10.1426 1.22559 10.4229 1.56738 10.4229ZM1.56738 14.0049H8.75879C9.10059 14.0049 9.38086 13.7246 9.38086 13.3828C9.38086 13.041 9.10742 12.7676 8.75879 12.7676H1.56738C1.21875 12.7676 0.952148 13.041 0.952148 13.3828C0.952148 13.7246 1.22559 14.0049 1.56738 14.0049Z"></path></svg></span>Description</th><td><strong><strong>A Comprehensive Guide from Foundations to Frontiers</strong></strong></td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesDate"><path d="M3.29688 14.4561H12.7031C14.1797 14.4561 14.9453 13.6904 14.9453 12.2344V3.91504C14.9453 2.45215 14.1797 1.69336 12.7031 1.69336H3.29688C1.82031 1.69336 1.05469 2.45215 1.05469 3.91504V12.2344C1.05469 13.6973 1.82031 14.4561 3.29688 14.4561ZM3.27637 13.1162C2.70898 13.1162 2.39453 12.8154 2.39453 12.2207V5.9043C2.39453 5.30273 2.70898 5.00879 3.27637 5.00879H12.71C13.2842 5.00879 13.6055 5.30273 13.6055 5.9043V12.2207C13.6055 12.8154 13.2842 13.1162 12.71 13.1162H3.27637ZM6.68066 7.38086H7.08398C7.33008 7.38086 7.41211 7.30566 7.41211 7.05957V6.66309C7.41211 6.41699 7.33008 6.3418 7.08398 6.3418H6.68066C6.44141 6.3418 6.35938 6.41699 6.35938 6.66309V7.05957C6.35938 7.30566 6.44141 7.38086 6.68066 7.38086ZM8.92285 7.38086H9.31934C9.56543 7.38086 9.64746 7.30566 9.64746 7.05957V6.66309C9.64746 6.41699 9.56543 6.3418 9.31934 6.3418H8.92285C8.67676 6.3418 8.59473 6.41699 8.59473 6.66309V7.05957C8.59473 7.30566 8.67676 7.38086 8.92285 7.38086ZM11.1582 7.38086H11.5547C11.8008 7.38086 11.8828 7.30566 11.8828 7.05957V6.66309C11.8828 6.41699 11.8008 6.3418 11.5547 6.3418H11.1582C10.9121 6.3418 10.8301 6.41699 10.8301 6.66309V7.05957C10.8301 7.30566 10.9121 7.38086 11.1582 7.38086ZM4.44531 9.58203H4.84863C5.09473 9.58203 5.17676 9.50684 5.17676 9.26074V8.86426C5.17676 8.61816 5.09473 8.54297 4.84863 8.54297H4.44531C4.20605 8.54297 4.12402 8.61816 4.12402 8.86426V9.26074C4.12402 9.50684 4.20605 9.58203 4.44531 9.58203ZM6.68066 9.58203H7.08398C7.33008 9.58203 7.41211 9.50684 7.41211 9.26074V8.86426C7.41211 8.61816 7.33008 8.54297 7.08398 8.54297H6.68066C6.44141 8.54297 6.35938 8.61816 6.35938 8.86426V9.26074C6.35938 9.50684 6.44141 9.58203 6.68066 9.58203ZM8.92285 9.58203H9.31934C9.56543 9.58203 9.64746 9.50684 9.64746 9.26074V8.86426C9.64746 8.61816 9.56543 8.54297 9.31934 8.54297H8.92285C8.67676 8.54297 8.59473 8.61816 8.59473 8.86426V9.26074C8.59473 9.50684 8.67676 9.58203 8.92285 9.58203ZM11.1582 9.58203H11.5547C11.8008 9.58203 11.8828 9.50684 11.8828 9.26074V8.86426C11.8828 8.61816 11.8008 8.54297 11.5547 8.54297H11.1582C10.9121 8.54297 10.8301 8.61816 10.8301 8.86426V9.26074C10.8301 9.50684 10.9121 9.58203 11.1582 9.58203ZM4.44531 11.7832H4.84863C5.09473 11.7832 5.17676 11.708 5.17676 11.4619V11.0654C5.17676 10.8193 5.09473 10.7441 4.84863 10.7441H4.44531C4.20605 10.7441 4.12402 10.8193 4.12402 11.0654V11.4619C4.12402 11.708 4.20605 11.7832 4.44531 11.7832ZM6.68066 11.7832H7.08398C7.33008 11.7832 7.41211 11.708 7.41211 11.4619V11.0654C7.41211 10.8193 7.33008 10.7441 7.08398 10.7441H6.68066C6.44141 10.7441 6.35938 10.8193 6.35938 11.0654V11.4619C6.35938 11.708 6.44141 11.7832 6.68066 11.7832ZM8.92285 11.7832H9.31934C9.56543 11.7832 9.64746 11.708 9.64746 11.4619V11.0654C9.64746 10.8193 9.56543 10.7441 9.31934 10.7441H8.92285C8.67676 10.7441 8.59473 10.8193 8.59473 11.0654V11.4619C8.59473 11.708 8.67676 11.7832 8.92285 11.7832Z"></path></svg></span>Date</th><td><time>@April 21, 2024</time></td></tr></tbody></table></header><div class="page-body"><h2 id="85e6fe34-47e2-4d87-bee4-13084b9bfcc8" class=""><strong>Introduction</strong></h2><p id="8a76b6db-d429-4998-9103-324b446f618d" class="">Welcome, curious minds! Today, we embark on an enlightening journey into the world of diffusion models, a cornerstone of modern generative artificial intelligence. This exploration will guide you from foundational principles to sophisticated applications, turning complex concepts into digestible insights. By the end of this blog, you&#x27;ll have a comprehensive understanding of diffusion models, enriched by practical examples and deep dives into their mechanisms and uses.</p><h2 id="64f55aee-23f8-4008-9cfe-78c74a1e69e8" class=""><strong>Part 1: Laying the Groundwork — Understanding Generative Models</strong></h2><h3 id="fdbfe53c-d06d-4109-8d78-16385e687960" class=""><strong>What is a Generative Model?</strong></h3><p id="9e6cecf0-7e16-428a-b52b-668af38509a9" class="">At their core, generative models are the master artists of the AI world, trained not just to interpret but to create. These models ingest vast datasets — images, sounds, texts — and learn to produce new, similar pieces of content. Imagine a painter who can recreate the style of any classic artist; generative models do this in the digital realm, synthesizing new content that mimics learned patterns and styles.</p><h3 id="f2d4f140-a397-427f-a744-999b1c4eda68" class=""><strong>Generative Models for Beginners</strong></h3><p id="75e1d137-9226-4d96-89b0-f1d38ceb6bbe" class="">Imagine an artist who can paint in any style after seeing just a few examples. Generative models are the AI equivalent, trained to understand and replicate the distribution of large datasets, whether they&#x27;re images, sounds, or texts, and then use this knowledge to create new, similar pieces of content.</p><h3 id="3906f4ef-fbc1-4762-ad95-d34cff788b95" class=""><strong>Intermediate Insights</strong></h3><p id="34304546-9b42-48d3-9fa1-d47b0eb4b2ba" class="">At their core, generative models learn the underlying probability distribution of a dataset. For example, a model trained on photographs of animals learns not just to recognize animals but also to generate new images of animals that don&#x27;t exist but look as if they could be real.</p><h3 id="5899b674-b14c-498d-8962-df2a19f57668" class=""><strong>Advanced Technical Overview</strong></h3><p id="c06a7662-4ce2-4190-ad52-6fe3b798b2a6" class="">Generative models are typically categorized into two types: generative adversarial networks (GANs) and variational autoencoders (VAEs). GANs learn to generate new data by using a duo of neural networks that compete against each other, while VAEs use a framework of encoding data into a compact latent space and then decoding it to generate new data. Each method has its strengths and complexities, particularly in how they handle the trade-off between fidelity and diversity of the generated outputs.</p><h3 id="d535c3ed-96cd-4723-8c12-1679f39b7137" class=""><strong>What is a GAN?</strong></h3><p id="287fd891-8933-471e-a5a2-259e07b3e6ed" class="">A <strong>generative adversarial network</strong> (GAN) is a class of machine learning frameworks, a prominent framework for approaching generative AI. The core idea of a GAN is based on the &quot;indirect&quot; training through a discriminator, another neural network that can tell how &quot;realistic&quot; the input seems, which itself is also being updated dynamically. This means that the generator is not trained to minimize the distance to a specific image, but rather to fool the discriminator. This enables the model to learn in an unsupervised manner.</p><h3 id="46bce065-5444-45da-8000-7f6a2f99c022" class=""><strong>What are Likelihood Models?</strong></h3><p id="96a43b9b-df45-48c2-ac1c-31eda75964ca" class="">A likelihood model is a type of probabilistic model that is focused on maximizing the likelihood of the observed data under the model. More specifically, in a likelihood model, the goal is to learn the parameters of a probability distribution P(x|θ) that makes the observed data x as likely as possible. This is done by maximizing the likelihood function:<br/>L(θ|x) = P(x|θ)<br/>or equivalently, by maximizing the log-likelihood:<br/>log L(θ|x) = log P(x|θ)<br/>with respect to the parameters θ of the model.<br/>Another class of generative models, termed “likelihood-based”, seeks to learn a model that assigns a high likelihood to the observed data samples.<br/></p><h3 id="cce8cdb4-e357-4eda-a781-f51cfc2699e1" class=""><strong>What is a Score-Based Model?</strong></h3><p id="f048a438-0eb0-44d7-894b-c8d68ac6f59c" class="">A score-based model determines the changes that will occur in an output due to an input.</p><p id="85e59170-f0a7-4764-8377-62f2b60a9e34" class="">A score-based model is a type of generative model that learns to estimate the score function (or gradient field) of the data distribution, rather than learning the distribution itself directly.</p><p id="8333e966-427b-4a56-9641-4de59e71f7db" class="">Specifically, given a data distribution p(x), the score function is defined as:<br/>∇x log p(x)<br/>The score indicates the direction of greatest increase in the log-density at any point x. It defines a vector field over the data space that points towards areas of higher probability density.<br/>Score-based models aim to learn a neural network ϕ(x) that approximates the true score function ∇x log p(x) as closely as possible. This is typically done by optimizing a scoring rule objective function that measures the closeness between the estimated and true scores.<br/></p><h2 id="d16b44b9-1403-431d-8fba-3021e3f7df39" class=""><strong>Part 2: Introduction to Diffusion Models</strong></h2><h3 id="570f6b9c-2e4a-4365-83aa-41716041ebe4" class=""><strong>A Simple Explanation of Diffusion Models</strong></h3><p id="5f79656b-89f4-41d7-9e5d-45dde2116c77" class="">Think of watching a blurry video become gradually clearer. Diffusion models start with a canvas of random noise (imagine static on an old TV screen) and step by step, refine this noise into a structured, coherent image or sound.</p><h3 id="999ec8d0-9555-4ab2-8c4e-05ee0d221dcc" class=""><strong>Intermediate Concepts</strong></h3><p id="f34d4b93-fbce-4eae-bfb3-0565fabdea8f" class="">Diffusion models are a type of generative model that work by first learning how to gradually add noise to data until only randomness remains, and then reversing this process. The model learns to &#x27;denoise</p><p id="ced62f40-3744-4ed3-8307-0c04dcce69e0" class="">&#x27;, transforming noise back into structured data, through a series of learned steps.</p><h3 id="066ba2ac-8af6-4515-8be3-c96cd20a470f" class=""><strong>Advanced Technical Insights</strong></h3><p id="4331d851-8cdb-47fa-b7eb-3a620aa265fd" class="">Mathematically, this involves a forward process where data x is corrupted stepwise by adding Gaussian noise, resulting in a sequence x1, x2,...,xT. The reverse process then learns to reconstruct x from xT using a parameterized model that estimates the reverse of the forward noise process. This is characterized by a series of conditional distributions, each refined through training to better predict earlier data states from later, noisier ones.</p><p id="7485a95a-3cee-497b-8cc4-9bba680042eb" class="">In this work, we explore and review diffusion models, which as we will demonstrate, have both likelihood-based and score-based interpretations.</p><h2 id="1b08ac34-2c67-4d3d-b036-a8d5dd132c39" class=""><strong>Part 3: Mastering the Chaos of Noise</strong></h2><h3 id="41a8a19f-fd6c-4d29-8094-c4055554603a" class=""><strong>Understanding Noise in Simple Terms</strong></h3><p id="533081f8-1e65-49e8-8d89-a0b2fb52c27b" class="">Imagine you&#x27;re watching your favorite TV show, and gradually, a static noise starts to overlay the screen until all you can see is fuzz. In diffusion models, this process of introducing noise is precisely controlled and systematic. Here&#x27;s how it unfolds:</p><ol type="1" id="aa0420dc-9529-434e-8373-324e84c927c4" class="numbered-list" start="1"><li><strong>Forward Process (Adding Noise):</strong> Starting with clear, coherent data (like a well-defined image), the model incrementally adds noise in multiple steps. With each step, the data becomes less recognizable, moving from slight graininess to complete static, much like slowly turning up the static on a TV until the original channel is obscured.</li></ol><ol type="1" id="a3086015-ca5f-456b-95b8-b602b9c54607" class="numbered-list" start="2"><li><strong>Reverse Process (Removing Noise):</strong> This is where the magic happens. The model learns to reverse the noise-adding process. Starting with the static-filled screen, the model gradually reduces the noise, step by step. Each reduction makes the image clearer until the original image is restored or a new coherent image is formed.</li></ol><h3 id="3c9e68f8-be2a-4308-8e20-b56ceb4cdb7a" class=""><strong>Transitioning to Advanced Understanding</strong></h3><p id="f3ea87c8-452c-4afa-b46d-fed725a665a2" class="">In more technical terms, diffusion models define this process through a series of probabilistic transformations. The forward process models the data&#x27;s transition from a low-entropy state (clear, structured) to a high-entropy state (noisy, unstructured) using a Markov chain. Each step applies a Gaussian noise increment, mathematically described by:</p><figure id="95b0cc7f-3b84-43b3-93b3-c3e5746c15c1" class="image"><a href="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled.png"><img style="width:336px" src="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled.png"/></a></figure><p id="067d1ffd-ff0e-4ba3-9f20-aeb7589d47bf" class="">where ε is sampled from a normal distribution, and βt is a small value controlling the noise level.</p><p id="7594a92e-075b-4332-9ff2-9a744b72bed5" class="">where:</p><ul id="09e3c4a7-62ad-49a1-9af3-ecc226a2e4af" class="bulleted-list"><li style="list-style-type:disc">Xt is the data at step t.</li></ul><ul id="526224ff-b4dc-4acc-9620-13a9e54a18f8" class="bulleted-list"><li style="list-style-type:disc">βt is the noise level at step t.</li></ul><ul id="3876170f-2c2d-4e19-b5da-503b278f5ff0" class="bulleted-list"><li style="list-style-type:disc">εt is the noise introduced, drawn from a normal distribution N(0,1).</li></ul><p id="8c90b34d-5072-4082-9b35-8cd8b03ef30c" class="">This equation represents the gradual transition from data to noise, where βt controls the rate of noise addition.</p><p id="e509dded-33a2-466a-a22d-37d234a90778" class="">The reverse process is where the model shines, learning to infer the sequence of cleaner images from noisier ones, essentially estimating:</p><figure id="95a7b127-0f99-4665-bf86-8d961ab6983d" class="image"><a href="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%201.png"><img style="width:144px" src="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%201.png"/></a></figure><p id="173185a0-e7f1-4ec2-b003-ceab203a2e39" class="">This reverse estimation uses another set of Gaussian parameters adjusted through training to minimize the difference between the original and reconstructed data.</p><p id="67eecd03-4830-4a8c-be05-c87af6dc2144" class="">In the reverse process, the model learns to reconstruct the original data from the noise. This is formulated as:</p><figure id="4b3337a3-7078-4fb5-9247-d3e1e7b7aa84" class="image"><a href="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%202.png"><img style="width:480px" src="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%202.png"/></a></figure><p id="7c09aa58-fad1-4c92-887f-c9d1df1881fc" class="">where μ(Xt,t) is the mean predicted by the model, and 2σt2 is the variance at each step, learned during training.</p><p id="cdee2979-c658-44d4-be26-b8ab5b48ea51" class="">These detailed formulations help in understanding how each step of the model contributes to the final output, allowing for precise control over the generation process.</p><h2 id="bafe1d52-45d3-4d01-a121-4cc80faa2ae1" class=""><strong>Part 4: Deep Dive into Variational Autoencoders (VAEs)</strong></h2><h3 id="dfa0c305-8d28-4d28-8af5-6c23b9f24047" class=""><strong>Compression and Decompression for Beginners</strong></h3><p id="358298a2-855e-4597-8373-5d61c420b149" class="">Imagine trying to fit your entire wardrobe into a small suitcase. You would need to pick the most essential items and fold them efficiently. VAEs do something similar with data. They compress data into a more compact form (encoding) and then expand it back to its original form (decoding), aiming to lose as little detail as possible.</p><h3 id="24522a50-6379-4040-ba72-3bfd1502a12d" class=""><strong>Intermediate Insights</strong></h3><p id="3baf7e64-6f70-4e39-a1b6-4bd37d5b3bd0" class="">VAEs are built on the framework of encoding data into a latent (hidden) space with reduced dimensionality and then decoding it back. The encoding process involves learning an average representation and how much to deviate from this average (the mean and variance). This is where the reparameterization trick comes into play, allowing gradients to flow</p><p id="01bc986f-7ff5-4dbe-96df-ffe1326c466a" class="">through random elements of the model:</p><figure id="9a064609-06a6-4237-8366-77138637fb1b" class="image"><a href="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%203.png"><img style="width:192px" src="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%203.png"/></a></figure><p id="204c3aac-45fd-4cd4-9ee2-5548947dfbe6" class="">where μ and σ are learned parameters, and ε is a random noise vector.</p><h3 id="575f628f-0a2a-4ed8-9978-662ba3db3cba" class=""><strong>Advanced Technical Details</strong></h3><p id="828a8bb4-b30b-4077-bdbb-a322f92e8262" class="">The decoder in a VAE aims to reconstruct the input data from this compact latent representation, minimizing the reconstruction error. The whole training process is governed by maximizing the ELBO, which balances two competing objectives: maximizing the likelihood of the data given the latent variables (reconstruction quality) and minimizing the Kullback-Leibler divergence between the learned latent distribution and the prior distribution. This ensures both high fidelity and diversity in data generation.</p><h2 id="52a3d5e7-ddc9-43c3-bc9d-681cf33bec22" class=""><strong>Part 5: The Magic of Mathematics — ELBO Explained</strong></h2><h3 id="f57f9422-b4dd-4de3-8509-ac6f99a7e3fb" class=""><strong>ELBO for Beginners</strong></h3><p id="28ee24e9-ec0c-4b07-bddf-0e7c59053b55" class="">Think of ELBO (Evidence Lower Bound) as your guide in balancing a see-saw. On one side, you want your generated data to closely match your real data (high fidelity), and on the other, you want your model not to be too complex (avoid overfitting).</p><h3 id="59bb297c-3440-47d0-8fc5-682f4a472d91" class=""><strong>Intermediate Exploration</strong></h3><p id="5deccf26-9ecc-4337-b99a-5288a0455798" class="">Mathematically, ELBO is a function used in the training of models like VAEs and, by extension, influences diffusion models. It is defined as:</p><figure id="c2c7f50f-4bc4-4710-99c3-2e95b7a7e1d9" class="image"><a href="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%204.png"><img style="width:432px" src="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%204.png"/></a></figure><p id="f74fab99-c2d6-450e-b92a-dd87a85d9aea" class="">where <em>p</em>(x∣z) is the likelihood of observing the data given the latent variables, and <em>DKL</em> represents the Kullback-Leibler divergence, a measure of how one probability distribution diverges from a second, expected probability distribution.</p><h3 id="ff938512-cea5-41e9-bf65-14addbdb3a55" class=""><strong>Advanced Mathematical Details</strong></h3><p id="fbe33c1c-4a0d-459e-9eca-d8dddb1524d4" class="">For diffusion models, the analogy to ELBO can be seen in how they optimize the reverse diffusion process. They minimize a variational loss that includes terms analogous to the ELBO’s components, aiming to make the reverse-generated samples indistinguishable from the true data distribution while ensuring that the transitions between noise levels are smooth and theoretically sound.</p><h2 id="e8dac9d0-3ae1-4c8a-b3b8-7b89867388c9" class=""><strong>Part 6: Advanced Techniques — Hierarchical Models and Guided Diffusion</strong></h2><h3 id="0b4ec92b-724a-4225-926b-a52be48ebe63" class=""><strong>From Simple to Complex Hierarchies</strong></h3><p id="0fe133f0-7d54-4cf9-90d1-48ac90e507b1" class="">In a basic model, you might imagine layers like floors in a building, where each floor adds more details to a basic sketch. In hierarchical diffusion models, each layer or level refines the output from the previous layer, allowing for more nuanced and detailed generation processes.</p><h3 id="8e67fe24-bf5f-451a-9f4d-073aa4eb3b5e" class=""><strong>Guidance in Practical Terms</strong></h3><p id="56f7b6d1-7196-4ebe-8b20-7cdc405e21e0" class="">Guidance techniques are like using a GPS to direct the generative process toward a desired destination. For example, classifier guidance involves adjusting the generation process based on feedback from a classifier trained to recognize specific features or attributes.</p><h3 id="9cc369a6-71a4-47a1-b646-3ab116edd24e" class=""><strong>Deep Dive into Technical Aspects</strong></h3><p id="89191099-6d2a-4551-82dc-746adcc62c75" class="">In classifier-free guidance, the model is trained to generate both conditioned and unconditioned samples, using a mix of data with and without specific guidance cues. During inference, the model can adjust the strength of conditioning by interpolating between the conditioned and unconditioned modes, effectively allowing the user to dial in how much influence the guidance has on the output.</p><h2 id="25b9d75e-0000-4aa9-a237-0157a89e7a4a" class=""><strong>Part 7: Score-Based Generative Models and Their Integration with Diffusion</strong></h2><h3 id="6590f71f-df7b-4973-b018-18a4d60e26af" class=""><strong>Understanding Score-Based Models</strong></h3><p id="e8e67b95-8223-48f6-9176-5b59673028ff" class="">Score-based models focus on optimizing a score function that quantifies how small changes in the input affect the likelihood of observing the real data. This approach is closely related to diffusion models, where the reverse process can be seen as optimizing a similar score function.</p><h3 id="b191489c-f2a2-42ac-ab64-91c025fadcef" class=""><strong>Advanced Discussion: Mathematical Underpinnings</strong></h3><p id="0259a27b-89ae-4aeb-93b1-217087fa0073" class="">The score function in these models is derived from the gradients of the log probability of the data distribution. By optimizing this score, the model learns to generate new samples by following the gradient towards higher probability regions.</p><h3 id="eb2009a2-d110-4406-98b1-92b91c90c601" class=""><strong>Integration with Diffusion Models</strong></h3><p id="c548a859-d027-4ac4-a00d-bb12f4b25103" class="">The connection between score-based and diffusion models lies in their shared principles of generating data by manipulating noise levels and optimizing probabilistic scores. Both approaches refine the generative process through iterative learning and adjustments based on probabilistic feedback.</p><hr id="4bfe8cbc-aaf4-4094-87a4-275543a990fe"/><figure id="de6979a2-1f5c-471a-868a-726a3670795a" class="image"><a href="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%205.png"><img style="width:611px" src="Unveiling%20the%20Mysteries%20of%20Diffusion%20Models%20b363fcc55d954d0391bcd27deb359d44/Untitled%205.png"/></a></figure><p id="27c18fce-4087-4b81-b2b6-dd739d0bd81d" class="">
+</p><p id="7760c185-175e-44db-a302-903e4398f425" class="">
+</p><p id="6c9c8805-b186-426a-aeac-644be5eedb28" class="">Reference :</p><p id="0126a664-ce4a-46b9-90d9-385431a8db32" class=""><a href="https://lilianweng.github.io/posts/2021-07-11-diffusion-models/">What are Diffusion Models? | Lil&#x27;Log (lilianweng.github.io)</a></p><p id="92439dba-4392-4979-b052-d25f15a819f8" class=""><a href="https://medium.com/@kemalpiro/step-by-step-visual-introduction-to-diffusion-models-235942d2f15c">Step by Step visual introduction to Diffusion Models | Medium</a></p><p id="18bdc0c1-77e7-40c4-9d38-836689f355dc" class=""><a href="https://www.assemblyai.com/blog/diffusion-models-for-machine-learning-introduction/">Introduction to Diffusion Models for Machine Learning (assemblyai.com)</a></p><p id="fdd3a438-5a16-4fda-a388-cbbcf9c4af03" class=""><a href="https://calvinyluo.com/2022/08/26/diffusion-tutorial.html">Understanding Diffusion Models&amp;#58; A Unified Perspective (calvinyluo.com)</a></p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

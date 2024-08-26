@@ -1,0 +1,4 @@
+﻿Project Name,Description,End Date,Type
+AGV for bin cleaning,,"October 15, 2020",Machine Learning
+Database GPT,"A Gen-AI based model enabling users to interact with database without learning any coding. ","March 27, 2024",Gen AI
+PII masking using presidio,In this project the client wanted to mask the PIIs of their customer for security purposes. We used Microsoft Presidio on their demand and made a software which uses presidio as a back end to do the same. The software sends the data to the server where Presidio is installed and in return Presidion sends back the masked image and docs. which on approval is saved on the server,,Machine Learning

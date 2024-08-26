@@ -1,0 +1,705 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Decoding Tree-Ring Watermarking: Nature&#x27;s Fingerprint in Digital Imagery</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(249, 228, 188, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="dedd6abe-c351-4ae1-859f-5192760f6f4a" class="page sans"><header><img class="page-cover-image" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled1.png" style="object-position:center 12.880000000000003%"/><h1 class="page-title"><strong>Decoding Tree-Ring Watermarking: Nature&#x27;s Fingerprint in Digital Imagery</strong></h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-select"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesSelect"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM7.62402 10.6348C7.79492 10.915 8.20508 10.9287 8.37598 10.6348L10.666 6.73145C10.8574 6.41016 10.7002 6.04102 10.3652 6.04102H5.62793C5.29297 6.04102 5.14941 6.43066 5.32031 6.73145L7.62402 10.6348Z"></path></svg></span>Type</th><td><span class="selected-value select-value-color-pink">Machine Learning</span></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesText"><path d="M1.56738 3.25879H14.4258C14.7676 3.25879 15.0479 2.97852 15.0479 2.63672C15.0479 2.29492 14.7744 2.02148 14.4258 2.02148H1.56738C1.21875 2.02148 0.952148 2.29492 0.952148 2.63672C0.952148 2.97852 1.22559 3.25879 1.56738 3.25879ZM1.56738 6.84082H14.4258C14.7676 6.84082 15.0479 6.56055 15.0479 6.21875C15.0479 5.87695 14.7744 5.60352 14.4258 5.60352H1.56738C1.21875 5.60352 0.952148 5.87695 0.952148 6.21875C0.952148 6.56055 1.22559 6.84082 1.56738 6.84082ZM1.56738 10.4229H14.4258C14.7676 10.4229 15.0479 10.1426 15.0479 9.80078C15.0479 9.45898 14.7744 9.18555 14.4258 9.18555H1.56738C1.21875 9.18555 0.952148 9.45898 0.952148 9.80078C0.952148 10.1426 1.22559 10.4229 1.56738 10.4229ZM1.56738 14.0049H8.75879C9.10059 14.0049 9.38086 13.7246 9.38086 13.3828C9.38086 13.041 9.10742 12.7676 8.75879 12.7676H1.56738C1.21875 12.7676 0.952148 13.041 0.952148 13.3828C0.952148 13.7246 1.22559 14.0049 1.56738 14.0049Z"></path></svg></span>Description</th><td>Understanding Tree-Ring Watermarks: Fingerprints for Diffusion Images that are Invisible and Robust</td></tr><tr class="property-row property-row-date"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesDate"><path d="M3.29688 14.4561H12.7031C14.1797 14.4561 14.9453 13.6904 14.9453 12.2344V3.91504C14.9453 2.45215 14.1797 1.69336 12.7031 1.69336H3.29688C1.82031 1.69336 1.05469 2.45215 1.05469 3.91504V12.2344C1.05469 13.6973 1.82031 14.4561 3.29688 14.4561ZM3.27637 13.1162C2.70898 13.1162 2.39453 12.8154 2.39453 12.2207V5.9043C2.39453 5.30273 2.70898 5.00879 3.27637 5.00879H12.71C13.2842 5.00879 13.6055 5.30273 13.6055 5.9043V12.2207C13.6055 12.8154 13.2842 13.1162 12.71 13.1162H3.27637ZM6.68066 7.38086H7.08398C7.33008 7.38086 7.41211 7.30566 7.41211 7.05957V6.66309C7.41211 6.41699 7.33008 6.3418 7.08398 6.3418H6.68066C6.44141 6.3418 6.35938 6.41699 6.35938 6.66309V7.05957C6.35938 7.30566 6.44141 7.38086 6.68066 7.38086ZM8.92285 7.38086H9.31934C9.56543 7.38086 9.64746 7.30566 9.64746 7.05957V6.66309C9.64746 6.41699 9.56543 6.3418 9.31934 6.3418H8.92285C8.67676 6.3418 8.59473 6.41699 8.59473 6.66309V7.05957C8.59473 7.30566 8.67676 7.38086 8.92285 7.38086ZM11.1582 7.38086H11.5547C11.8008 7.38086 11.8828 7.30566 11.8828 7.05957V6.66309C11.8828 6.41699 11.8008 6.3418 11.5547 6.3418H11.1582C10.9121 6.3418 10.8301 6.41699 10.8301 6.66309V7.05957C10.8301 7.30566 10.9121 7.38086 11.1582 7.38086ZM4.44531 9.58203H4.84863C5.09473 9.58203 5.17676 9.50684 5.17676 9.26074V8.86426C5.17676 8.61816 5.09473 8.54297 4.84863 8.54297H4.44531C4.20605 8.54297 4.12402 8.61816 4.12402 8.86426V9.26074C4.12402 9.50684 4.20605 9.58203 4.44531 9.58203ZM6.68066 9.58203H7.08398C7.33008 9.58203 7.41211 9.50684 7.41211 9.26074V8.86426C7.41211 8.61816 7.33008 8.54297 7.08398 8.54297H6.68066C6.44141 8.54297 6.35938 8.61816 6.35938 8.86426V9.26074C6.35938 9.50684 6.44141 9.58203 6.68066 9.58203ZM8.92285 9.58203H9.31934C9.56543 9.58203 9.64746 9.50684 9.64746 9.26074V8.86426C9.64746 8.61816 9.56543 8.54297 9.31934 8.54297H8.92285C8.67676 8.54297 8.59473 8.61816 8.59473 8.86426V9.26074C8.59473 9.50684 8.67676 9.58203 8.92285 9.58203ZM11.1582 9.58203H11.5547C11.8008 9.58203 11.8828 9.50684 11.8828 9.26074V8.86426C11.8828 8.61816 11.8008 8.54297 11.5547 8.54297H11.1582C10.9121 8.54297 10.8301 8.61816 10.8301 8.86426V9.26074C10.8301 9.50684 10.9121 9.58203 11.1582 9.58203ZM4.44531 11.7832H4.84863C5.09473 11.7832 5.17676 11.708 5.17676 11.4619V11.0654C5.17676 10.8193 5.09473 10.7441 4.84863 10.7441H4.44531C4.20605 10.7441 4.12402 10.8193 4.12402 11.0654V11.4619C4.12402 11.708 4.20605 11.7832 4.44531 11.7832ZM6.68066 11.7832H7.08398C7.33008 11.7832 7.41211 11.708 7.41211 11.4619V11.0654C7.41211 10.8193 7.33008 10.7441 7.08398 10.7441H6.68066C6.44141 10.7441 6.35938 10.8193 6.35938 11.0654V11.4619C6.35938 11.708 6.44141 11.7832 6.68066 11.7832ZM8.92285 11.7832H9.31934C9.56543 11.7832 9.64746 11.708 9.64746 11.4619V11.0654C9.64746 10.8193 9.56543 10.7441 9.31934 10.7441H8.92285C8.67676 10.7441 8.59473 10.8193 8.59473 11.0654V11.4619C8.59473 11.708 8.67676 11.7832 8.92285 11.7832Z"></path></svg></span>Date</th><td><time>@April 29, 2024</time></td></tr></tbody></table></header><div class="page-body"><p id="43957cfd-fe27-420a-9902-aafb7bd4392e" class="">In the vast digital landscape, the importance of safeguarding artistic and intellectual property cannot be overstated. Let&#x27;s delve into the world of Tree-Ring Watermarking, an innovative technique inspired by the concentric growth rings of trees, as detailed in a cutting-edge research paper.<br/><br/></p><p id="d5e04a96-c6eb-4b20-bdf7-d0c7ef7f13b1" class="">
+</p><h2 id="2a92aa59-39c5-455f-b3c7-d750864b6e51" class=""><strong><strong>Understanding the Foundations:</strong></strong></h2><p id="93ae74ac-56a2-4bfd-b021-42e91773613f" class="">
+</p><p id="64c087b2-b225-4599-8416-3fdecf3bcf9d" class="">At the heart of this method lies the <strong>Fourier frequency</strong>, a concept that transforms our traditional understanding of images from mere color and brightness to a symphony of waves.</p><p id="9a06b839-4439-4e6c-a126-9e892ce22c5e" class=""><br/><br/><strong>So what is Fourier frequency ?</strong></p><p id="91f82dc4-0591-4d21-979d-940a197b900a" class="">let&#x27;s break down the concept of Fourier frequency in a simple way, especially as it relates to images:</p><p id="5ffc4ffe-68e3-4adc-ba3a-2c0cbb9fbf6a" class="">Imagine you have a beautiful picture made out of tiny little tiles (pixels). Each tile has a certain color that blends together to form the full picture. Now, suppose you wanted to understand the pattern of how these colors change across the picture—like where it goes from light to dark or how smoothly the colors change.</p><p id="c9579115-9c81-4e79-bf6f-77a614a97cd4" class=""><strong>Fourier transform</strong> is like a magical tool that helps us see these patterns not in terms of colors and tiles, but in terms of waves. It tells us about different waves in the picture:</p><p id="f8a400dc-07d4-4b98-8eea-39e4933fe8f0" class=""><strong>Slow waves (low frequencies):</strong> These are like the broad, gentle waves in the ocean that show the big, smooth changes in color in the picture. For example, a clear sky in a sunset photo that gradually changes from orange to purple.<br/><br/><strong>Fast waves (high frequencies):</strong> These are like tiny, rapid ripples on a pond. They show where there are sharp, quick changes in color. For example, the sharp edge between a building and the sky in a cityscape.<br/>When someone talks about Fourier frequencies in an image, they&#x27;re referring to these waves and how quickly they rise and fall (change).<br/></p><p id="33eb6e33-f09c-478b-b363-53ee5f4fd40d" class="">In watermarking, using this Fourier idea, you can sneak in some extra tiny waves (changes) that are so subtle they&#x27;re invisible unless you know exactly how to look for them with special tools. This way, you can mark the image as yours without actually changing how it looks to us when we just enjoy the view.</p><p id="c77e3347-f5f8-4b10-a3f5-9e6b59d70200" class="">
+</p><h3 id="fb47dcf3-bbe6-4455-9a8d-da3103388a97" class=""><strong>What is Fourier Space?</strong></h3><p id="af3d5e56-bdfb-4461-ada5-95ef9fcd5b47" class="">Fourier space, often referred to as the frequency domain, is a conceptual framework used to analyze and represent the frequency components of signals or images. When we talk about Fourier space, we&#x27;re essentially looking at how a signal (like sound) or an image can be broken down into its individual frequencies—think of these as the distinct tones or visual patterns that combine to form the overall sound or picture.</p><h3 id="cb45b9b0-ffe6-4a6d-86f4-8cf8f2b83792" class=""><strong>How It Works for Images:</strong></h3><ol type="1" id="ec62be89-dcf0-4be0-97bd-c2e612def54a" class="numbered-list" start="1"><li><strong>From Spatial to Frequency Domain</strong>: Normally, we see images in the spatial domain, where each point (pixel) has a position and a color or intensity. Fourier space transforms this view from position-based to frequency-based. It tells us about the presence of patterns, their orientations, and how they change across the image.</li></ol><ol type="1" id="596e2a41-00fa-479c-99ec-7949196062e7" class="numbered-list" start="2"><li><strong>Low and High Frequencies</strong>: In Fourier space, low frequencies represent the general, slow-changing parts of an image—like a smooth gradient of colors in a sunset. High frequencies represent the rapid changes—like the detailed edges of clouds or trees against the sky.</li></ol><h3 id="676cf0de-5729-472a-a994-78fca63c235b" class=""><strong>Visualizing Fourier Space:</strong></h3><p id="22f6eb8d-bfbc-4cbe-b529-4e874611bb9b" class="">If you were to visually represent Fourier space of an image, it might look like a plot or a graph with points scattered across it, where:</p><ul id="631ae322-ee35-48a9-9238-6edb7ec40721" class="bulleted-list"><li style="list-style-type:disc">The center of the plot represents the lowest frequencies (less detail, more general features).</li></ul><ul id="c47a3ec2-c5e9-4649-bcf8-2cfd333f2421" class="bulleted-list"><li style="list-style-type:disc">The edges of the plot represent the highest frequencies (more detail, sharp edges and textures).</li></ul><h3 id="e7719e51-ff48-41d1-b87c-ec3766839444" class=""><strong>Practical Use:</strong></h3><p id="8476ba2e-3527-47c3-836f-5303f0f6a0f9" class="">Fourier space is particularly useful in image processing for tasks such as:</p><ul id="c7e354ff-0f7d-4de5-8518-fc33a0d3ca06" class="bulleted-list"><li style="list-style-type:disc"><strong>Filtering</strong>: Removing noise (which often appears as high-frequency information) or blurring (which reduces high-frequency content) can be accomplished by manipulating the frequency components in Fourier space.</li></ul><ul id="a186317a-977f-4c57-b61f-8e52db5439cf" class="bulleted-list"><li style="list-style-type:disc"><strong>Compression</strong>: By understanding which frequencies contain the most important information, images can be compressed effectively by keeping the essential frequencies and discarding the less important ones.</li></ul><h3 id="11e91f47-70c3-44a8-be05-e5ba27d3c22c" class=""><strong>Fourier Space in Tree-Ring Watermarking:</strong></h3><ol type="1" id="11968c33-f97c-42bd-9c5f-cf11c4dc72a5" class="numbered-list" start="1"><li><strong>Embedding the Watermark</strong>: The Tree-Ring Watermarking technique involves embedding a watermark directly into the initial noise vector of a diffusion model. Instead of altering the final image, the watermark is integrated into the Fourier space of this noise vector. Fourier space, representing frequency components, allows the watermark to be embedded in a way that it becomes an intrinsic part of the image generation process, rather than just an overlay or an afterthought.</li></ol><ol type="1" id="a733a02b-e0bb-4e72-8201-f9337e79c2b9" class="numbered-list" start="2"><li><strong>Pattern in Fourier Space</strong>: The specific pattern used for the watermark is structured in the Fourier space. This structuring ensures that the watermark is invariant to common image transformations like rotations, crops, and flips. These invariances are critical because they make the watermark robust against attempts to remove or alter it without significantly impacting the visual quality of the generated image.</li></ol><ol type="1" id="e1c67db8-7e53-469f-8e32-4ac439c4d85e" class="numbered-list" start="3"><li><strong>Detection Through Inversion</strong>: The detection of the watermark involves inverting the diffusion process to retrieve the original noise vector and then analyzing its Fourier space. By examining this space, the presence of the structured watermark can be confirmed. This method of detection is sophisticated because it requires reversing the model&#x27;s image generation process to check for the watermark, making it secure against unauthorized detection.</li></ol><h3 id="fc0a7292-2143-4913-a9f9-1556e964dbd8" class=""><strong>Why Fourier Space is Ideal Here:</strong></h3><ul id="cd02041b-6e6c-481c-8cf5-f850e4b88564" class="bulleted-list"><li style="list-style-type:disc"><strong>Invisibility</strong>: Watermarking in the Fourier space allows the watermark to remain invisible in the spatial (normal viewing) domain. Since Fourier space deals with frequencies, the modifications made for the watermark do not typically alter the visible aspects of the image directly but rather its underlying frequency components.</li></ul><ul id="2ac1ce11-de26-4ca5-9e91-ad72828bc3fc" class="bulleted-list"><li style="list-style-type:disc"><strong>Robustness</strong>: By embedding the watermark in the frequency domain, it becomes inherently more resistant to image processing techniques that might otherwise degrade or remove a spatial-domain watermark. This includes resistance to resizing, compression, and various forms of noise interference.</li></ul><p id="978366da-763c-45c3-8b07-6a4ebcf801bf" class=""><strong>does it mean that it cannot be changed or inversed ?</strong></p><p id="5a0c4e03-2d49-4c6f-8c55-c000bc99adc9" class="">Fourier space is both changeable and invertible:</p><ul id="fb07603b-495b-4f82-8a37-dfc7e8d1f50b" class="bulleted-list"><li style="list-style-type:disc"><strong>Changeable</strong>: You can modify Fourier space to alter the original signal or image in controlled ways. For instance, removing high-frequency components from Fourier space (a process known as low-pass filtering) can smooth an image or reduce noise.</li></ul><ul id="83dc61b5-9f7a-4840-9c0c-b8c15e49e87a" class="bulleted-list"><li style="list-style-type:disc"><strong>Invertible</strong>: The process of transforming a function to Fourier space is reversible through the Inverse Fourier Transform. This means that after modifications in Fourier space, you can reconstruct the original signal or image, potentially with some alterations (like added watermarks or filtered noise).</li></ul><h3 id="68b38aa2-294d-4414-9e64-6132823d923c" class="">How does Tree Ring achieve this ?</h3><p id="3c56f447-436e-4218-88eb-998a19d2e703" class="">The Tree-Ring Watermarking technique described in the paper achieves robustness against common image transformations and does not require additional training or fine-tuning through a few key strategies in how it embeds and detects the watermark:</p><figure id="51c810a9-1224-48ac-9606-07feea0099ef" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled.png"><img style="width:708px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled.png"/></a><figcaption>                                                                Figure 1</figcaption></figure><p id="0943a833-c660-4661-8e1b-ef542da2d546" class="">
+</p><figure id="0d67d47c-7b25-4b78-b51f-9b68c79e8ef0" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%201.png"><img style="width:795px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%201.png"/></a></figure><p id="dcb93354-69ba-43cc-b585-39489a39400e" class="">Figure 2: Various watermarked generations with the same random seed are presented, showcasing the “invisible” nature of our proposed watermark. A zoomed-in view with high contrast is provided in the bottom right corner.</p><h3 id="481e5dda-e52d-4495-8fbd-0a8645efe30b" class=""><strong>1. Embedding Watermark in the Initial Noise Vector:</strong></h3><p id="2f7f0740-5b7a-4119-afaa-87b3eb9dceac" class="">The Tree-Ring Watermark embeds a pattern directly into the Fourier space of the initial noise vector used by the diffusion model for image generation. This approach has several advantages:</p><ul id="d24d1e40-87f1-4887-a26f-0051d28aa4b1" class="bulleted-list"><li style="list-style-type:disc"><strong>Integration with Sampling Process:</strong> Because the watermark is embedded at the very beginning of the image generation process, it becomes an intrinsic part of the image as it evolves through the model&#x27;s layers. This deep integration helps maintain the watermark&#x27;s presence even if the final image undergoes significant transformations.</li></ul><ul id="4ec64e1a-8e4f-4b83-b7f1-70923a0e0fe0" class="bulleted-list"><li style="list-style-type:disc"><strong>Fourier Space Embedding:</strong> By placing the watermark in the Fourier space, the technique leverages properties that make it resistant to geometric transformations like rotation, flips, and crops. Fourier transforms have inherent qualities where rotation in the image space corresponds to a similar rotation in the Fourier space, and similarly for other transformations. This alignment ensures the watermark persists regardless of such changes.</li></ul><h3 id="27e0a067-30ef-4d6e-9367-2bf69efbf2e2" class=""><strong>2. Robustness Against Transformations:</strong></h3><p id="55de2a33-5c82-4fe2-ab61-001db12626d0" class="">The pattern used in the watermark (described as a Tree-Ring pattern in the Fourier space) is designed to be invariant to typical image manipulations such as:</p><ul id="f7490074-07cf-4350-8796-50446b464bf7" class="bulleted-list"><li style="list-style-type:disc"><strong>Crops and Flips:</strong> Since the watermark is distributed across the Fourier space and not tied to specific spatial locations, cropping or flipping the image does not necessarily remove the watermark.</li></ul><ul id="a2d9c3de-f1f1-4ce9-abc3-96313ad17d77" class="bulleted-list"><li style="list-style-type:disc"><strong>Color Jitter and Noise:</strong> The use of Fourier space for embedding the watermark also means that modifications like color adjustments or added noise, which primarily affect the image&#x27;s spatial domain, are less likely to disrupt the frequency-based watermark.</li></ul><ul id="d2ad8b80-e2ac-4f21-ba70-f21e8ed71506" class="bulleted-list"><li style="list-style-type:disc"><strong>Dilation and Rotation:</strong> The circular nature of the Tree-Ring pattern in the Fourier space means that rotations and dilations (which expand or contract the image) will similarly affect the watermark, allowing it to remain detectable.</li></ul><h3 id="98e7e52f-bb6f-4ef3-991c-13566e3a38b5" class=""><strong>3. Detection by Controlled Parties:</strong></h3><p id="0ad68578-16d6-446e-9d40-4f48810acbd8" class="">Detection of the watermark requires reversing the image generation process to recover the initial noise vector and inspecting its Fourier transform for the watermark pattern. This process can only be performed efficiently by those who have access to the specific model parameters and architecture used to generate the image. This exclusivity adds a layer of security, as unauthorized parties cannot easily detect or tamper with the watermark.</p><h3 id="38d52f85-bf51-492e-bf37-229345329d6d" class=""><strong>4. No Need for Additional Training:</strong></h3><p id="6b7b2cd9-c84c-4f26-bed0-03f93618cd92" class="">Unlike some deep learning-based watermarking approaches, Tree-Ring Watermarking does not require retraining the model or fine-tuning it with watermarked examples. The watermarking process is a plug-in addition that operates on the model&#x27;s input (the initial noise vector) rather than altering the model itself. This simplicity and lack of dependency on the training data streamline the implementation and deployment in various applications.</p><p id="e62599a9-52d5-4ef4-a4d7-06139d0738af" class="">
+</p><p id="77aad3ad-e9f3-4673-8364-cab362f2b121" class=""><strong>What will happen if i alter the image by rotation, scaling, flipping and cropping?</strong></p><p id="fd9a96be-78ac-43b4-8943-6c956f70caaa" class="">When an image is transformed into Fourier space (via a Fourier transform), it represents the image in terms of its frequency components rather than its spatial pixels. The key attributes of Fourier space relevant to transformations are:</p><ol type="1" id="a30ecd54-c529-4fb7-98ff-5fe0965e4c29" class="numbered-list" start="1"><li><strong>Rotation:</strong> A rotation in the image space corresponds to a similar rotation in Fourier space. This property ensures that if an image is rotated, its frequency representation rotates in the same way, but the essential characteristics of the frequencies (like the watermark) remain intact.</li></ol><ol type="1" id="7355ac96-52af-48c6-8d63-6370e224fa6f" class="numbered-list" start="2"><li><strong>Scaling and Flips:</strong> Similar to rotations, scaling (resizing) and flipping an image will alter the Fourier space representation accordingly, but the fundamental patterns (such as those used for watermarking) can be designed to remain detectable despite these changes.</li></ol><h3 id="49c50349-16d5-460c-89f6-3b3ce8a4db21" class=""><strong>What Happens When You Crop an Image:</strong></h3><ul id="390420cf-2383-4187-95c8-29a9a8f15d93" class="bulleted-list"><li style="list-style-type:disc"><strong>Cropping and Fourier Space:</strong> Cropping an image reduces it to a part of the original image. In the spatial domain, this is simply cutting out a section; however, in the Fourier domain, the effect is not as straightforward. Cropping affects all frequency components because it changes the boundaries and contents of the image, thereby altering how frequencies are distributed across the image.</li></ul><ul id="6c55d57c-460c-41d4-a275-dfaf9cf7a503" class="bulleted-list"><li style="list-style-type:disc"><strong>Impact on Watermark:</strong> If a watermark is embedded in Fourier space (especially using a technique like Tree-Ring Watermarking), it is typically dispersed throughout the frequency spectrum. Cropping the image will modify the frequency representation, but since the watermark is not localized to a specific area (but rather distributed), significant parts of the watermark can still be present in the cropped image’s Fourier transform.</li></ul><h3 id="a7380750-57c7-49b8-8083-5fba9180fb76" class=""><strong>Robustness to Cropping:</strong></h3><p id="d6ddd8a0-0f13-4778-a0d8-908218e4cbc2" class="">Here&#x27;s how the robustness to cropping is maintained:</p><ul id="87b6ef0c-a931-4e04-861c-0161a519c150" class="bulleted-list"><li style="list-style-type:disc"><strong>Distribution of Watermark:</strong> The watermark in the Fourier space is not concentrated in a small area but is spread across different frequencies. This distribution means that even after cropping, parts of the watermark will likely still exist within the Fourier spectrum of the cropped section.</li></ul><ul id="ece45f81-b033-48bb-a389-095f5cac5e95" class="bulleted-list"><li style="list-style-type:disc"><strong>Detection Post-Cropping:</strong> When detecting the watermark, the process involves converting whatever remains of the cropped image back to Fourier space and checking for the watermark&#x27;s signature. Since the watermarking pattern (like the Tree-Ring structure) is designed to be recognizable even when partially present, it can still be detected.</li></ul><p id="c95b275a-b05f-4202-9565-909ab333e39a" class="">
+</p><p id="2b7981c2-3b2f-4292-bd2d-ddc8b04aa72e" class=""><strong>Threat Model  </strong></p><p id="c442b43c-c602-42bd-84d1-52a680aa2bdf" class="">The threat model defines the potential risks the watermarking system is designed to address. It considers three roles:</p><ol type="1" id="d22884ec-91c1-43e8-aee9-d945fb123d37" class="numbered-list" start="1"><li><strong>Model Owner (Generation Phase)</strong>: The owner of the diffusion model can generate images with a watermark that doesn&#x27;t affect image quality. This watermark is meant to be a discrete signature verifying the image&#x27;s origin.</li></ol><ol type="1" id="3b34aaa6-3f59-4b61-a7ea-5d22e91a0e4f" class="numbered-list" start="2"><li><strong>Forger</strong>: A forger might attempt to remove the watermark to use the image illicitly, claiming ownership or altering it for other purposes.</li></ol><ol type="1" id="6eb6227b-0bd0-47f8-a609-9d6cc8162be2" class="numbered-list" start="3"><li><strong>Model Owner (Detection Phase)</strong>: The owner must be able to detect the watermark in an image to prove its origin, even if the image has been altered, without knowing specific conditions under which the image was generated, like the text prompt or generation parameters.</li></ol><p id="3e4b4d66-91fb-4792-ae0b-86c2401e1dea" class="">
+</p><p id="1844db96-0616-4d32-bac9-e802b24c90b6" class=""><strong><strong>Tree-Ring Watermarking Overview</strong></strong></p><p id="55f5d285-97a7-4e6b-97a8-4222569fed17" class="">This watermarking system works by inserting a specific pattern into the initial noise used by a diffusion model to generate images. This pattern, or &quot;key,&quot; is placed in the Fourier space of the noise vector. Since diffusion models start with noise and iteratively refine it into an image, the watermark becomes part of the image naturally, without direct modification of the image itself.</p><p id="d4d533c7-c121-4970-b1ef-d4e44997a808" class="">The detection of the watermark requires reversing the image generation process to get back to the initial noise vector, then checking if the &quot;key&quot; is present. This key is inserted into the low-frequency part of the Fourier space, meaning it&#x27;s subtly spread throughout the image and less susceptible to being removed by alterations like cropping or filtering.</p><h3 id="ce574072-c563-4888-b14c-0f05240b00ff" class=""><strong>Constructing the Tree-Ring Key</strong></h3><p id="3bc7f80a-92d2-417d-aaed-92bfc3017c3c" class="">The watermark uses properties of the Fourier transform, which is a mathematical way to represent a signal (or image) by the frequencies that compose it. The &quot;Tree-Ring&quot; patterns are designed to be invariant to typical image manipulations:</p><ul id="d2600dac-58e2-4d92-b4e3-104f7d283c5b" class="bulleted-list"><li style="list-style-type:disc">A rotation in pixel space corresponds to a rotation in Fourier space.</li></ul><ul id="333200c0-b593-4aae-9fdf-54c2813ee8d3" class="bulleted-list"><li style="list-style-type:disc">A translation in pixel space multiplies all Fourier coefficients by a constant complex number.</li></ul><ul id="38999fba-a43e-44ed-ace4-e17f0cc87a62" class="bulleted-list"><li style="list-style-type:disc">A dilation/compression in pixel space corresponds to a compression/dilation in Fourier space.</li></ul><ul id="41c074f8-cfc8-4ab1-9e2f-5c5a2f90241f" class="bulleted-list"><li style="list-style-type:disc">Color jitter in pixel space (adding a constant to all pixels in a channel) corresponds to changing the magnitude of the zero-frequency Fourier mode..</li></ul><p id="2c282ac3-9172-4948-a851-cb5ddcd5d71d" class="">Three key types are proposed:</p><ul id="5118d4b1-a000-40d6-9ddd-aec8852abc31" class="bulleted-list"><li style="list-style-type:disc"><strong>Tree-RingZeros</strong>: This is the simplest, with zeros in a circular pattern in Fourier space. The key is chosen to be an array of zeros, which creates invariance to shifts, crops, and dilations. This key is invariant to manipulations, but at the cost of departing severely from the Gaussian distribution. It also prevents multiple keys from being used to distinguish between models.</li></ul><ul id="c4750fa9-0649-4dbe-a82c-7e61db19bd70" class="bulleted-list"><li style="list-style-type:disc"><strong>Tree-RingRand</strong>: We draw the a fixed key k∗ from a Gaussian distribution. The key has the same id Gaussian nature as the original Fourier modes of the noise array, and so we anticipate this strategy will have the least impact on generation quality. This method also offers the flexibility for the model owner to possess multiple keys. However, it is not invariant to make image manipulations.</li></ul><ul id="597e557a-9dd5-4bfb-8995-1d101297dca2" class="bulleted-list"><li style="list-style-type:disc"><strong>Tree-RingRings</strong>: This pattern comprised of multiple rings, and constant value along each ring. This makes the watermark invariant to rotations. The constant ring values from a Gaussian distribution. This provides some invariance to multiple types of image transforms, while also ensuring that the overall distribution is only minimally shifted from an isotropic Gaussian.</li></ul><p id="ddaf83d1-3dc4-4bed-9a54-95899b3eae94" class="">
+</p><h3 id="f6771119-1191-43a5-998d-8c517bb94a94" class=""><strong>Interpretation of the Results</strong></h3><p id="a5606af0-9454-4b8d-a3e3-0223be1bc9ba" class="">In Figure 3, we see images generated with different prompts. Each set of images shows the original, the watermarked version, and the attacked (altered) version, alongside the calculated P-values. The P-values indicate the likelihood that the watermark would be detectable by chance. Low P-values in watermarked and attacked images suggest that the watermark is indeed present and detectable even after the image has been altered.</p><p id="7e3e2098-1d1c-40ef-b1ce-d0ba586a2eae" class="">
+</p><h3 id="c37ee2c1-7128-45b7-bd28-10ddfaf27e31" class=""><strong>P-values and Watermark Detection</strong></h3><p id="57b29cc6-eaf0-4d0c-8b54-951645f120fe" class="">The watermark detection process involves statistical testing. For a given image, if the noise vector retrieved by reversing the diffusion process contains the watermark pattern, it&#x27;s statistically unlikely to have occurred by chance. The authors propose a method to calculate a P-value, which quantifies this likelihood. If the P-value is below a certain threshold, it&#x27;s safe to assume the watermark is present.</p><p id="3a4f786e-a873-4f9f-a73b-507b287bba43" class=""><div class="indented"><figure id="7856e639-0198-4a7c-9928-091de3e33acd" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%202.png"><img style="width:785px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%202.png"/></a><figcaption>                                                                                Figure 3</figcaption></figure></div></p><h3 id="246600af-38da-4576-be74-3929d6d0159c" class=""><strong>What is a P-value?</strong></h3><p id="7ee84ed8-3eb4-4e04-ab27-7e77093cce00" class="">A P-value is a statistical measure that helps determine the significance of the results of an experiment or test. In this context, it&#x27;s used to assess whether the watermark in an image is likely to have occurred by random chance.</p><p id="02595df5-a77d-4ccf-8918-4374f10f2aff" class="">The lower the P-value, the less likely it is that the watermark pattern could have occurred randomly, and therefore, the more confident we can be that the watermark was indeed present.</p><h3 id="27a816f9-27b2-4471-8a14-fd71e5b97668" class=""><strong>Explanation of the P-values:</strong></h3><ol type="1" id="77e232de-a634-4253-a517-8c684bc9ef26" class="numbered-list" start="1"><li><strong>&quot;Anime art of a dog in Shenandoah National Park&quot;</strong><ul id="9bb46c85-9d3b-4e49-b7c1-abccfdd8efde" class="bulleted-list"><li style="list-style-type:disc">No Watermark: P-value = 0.27. This is relatively high, meaning there&#x27;s a 27% probability that any detected pattern could be due to random chance. No watermark is detected.</li></ul><ul id="1756cba9-e1d8-46c0-9666-82ed20bd912a" class="bulleted-list"><li style="list-style-type:disc">Watermarked: P-value = 3.73e-60. This is extremely low, virtually zero, indicating that the watermark&#x27;s presence is almost certainly not due to chance.</li></ul><ul id="943775c3-c42f-4fcb-988a-69f30b9301bb" class="bulleted-list"><li style="list-style-type:disc">Attacked: P-value = 7.41e-16. Again, a very low P-value suggests that despite the image being attacked or altered, the watermark is still detected with high confidence.</li></ul></li></ol><ol type="1" id="0d8cc051-5271-4176-987c-daa7ac02709c" class="numbered-list" start="2"><li><strong>&quot;Synthwave style artwork of a person is kayaking in Acadia National Park&quot;</strong><ul id="952bc5d2-56da-4a3b-9009-5d40e505a2a7" class="bulleted-list"><li style="list-style-type:disc">No Watermark: P-value = 0.15. A 15% chance that a detected pattern could be random; no significant watermark is present.</li></ul><ul id="f2a6f4da-f9a7-40fc-a143-2dd2c2e8c906" class="bulleted-list"><li style="list-style-type:disc">Watermarked: P-value = 1.38e-19. The presence of the watermark is highly significant and not due to random chance.</li></ul><ul id="52d6cc3c-2c18-4da7-8058-aee588cab022" class="bulleted-list"><li style="list-style-type:disc">Attacked: P-value = 1.51e-8. Despite the image being modified, the watermark is still detected with a high degree of certainty.</li></ul></li></ol><ol type="1" id="fe0e3b8b-5b29-42ee-ab87-55eb1e13358d" class="numbered-list" start="3"><li><strong>&quot;An astronaut riding a horse in Zion National Park&quot;</strong><ul id="26765640-1367-4d4d-a408-c284695e7c35" class="bulleted-list"><li style="list-style-type:disc">No Watermark: P-value = 0.91. There&#x27;s a 91% probability of a pattern occurring by chance, indicating no watermark.</li></ul><ul id="52fc1b3b-48cc-458a-9959-38e5fc423c4c" class="bulleted-list"><li style="list-style-type:disc">Watermarked: P-value = 9.91e-51. Extremely low P-value indicates a very strong presence of the watermark.</li></ul><ul id="caf6b4ed-1d77-4e90-8b06-00eab129b77d" class="bulleted-list"><li style="list-style-type:disc">Attacked: P-value = 2.90e-5. Even after an attack, the watermark is detected with high confidence.</li></ul></li></ol><ol type="1" id="7ef72200-f287-4022-88eb-c72b303423e1" class="numbered-list" start="4"><li><strong>&quot;A painting of Yosemite National Park in Van Gogh style&quot;</strong><ul id="90a6ab31-7840-4c83-a628-160e9d8a822b" class="bulleted-list"><li style="list-style-type:disc">No Watermark: P-value = 0.41. A 41% probability of random occurrence suggests no watermark is present.</li></ul><ul id="122adc69-8583-4adc-bc3a-0117729c069f" class="bulleted-list"><li style="list-style-type:disc">Watermarked: P-value = 1.22e-35. The watermark is significantly present and not by chance.</li></ul><ul id="ad25c1b9-7041-48ab-9e5d-4a09ebded481" class="bulleted-list"><li style="list-style-type:disc">Attacked: P-value = 9.46e-07. The watermark is still detectable with high confidence even after the image is altered.</li></ul><p id="cade38c3-5b3a-4cbb-98d2-2e86bb8e3205" class="">
+</p></li></ol><p id="0f822faf-b296-46d4-919e-47f2ba60cf91" class="">The paper also includes a histogram (Figure 4) of a noise vector from a natural image, which confirms that the distribution of noise is Gaussian. This validates their approach, as the watermarking system is designed to work with Gaussian noise, which is what diffusion models naturally produce.</p><figure id="59e02b64-a65e-42ed-92fd-b4a098eccc3e" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%203.png"><img style="width:708px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%203.png"/></a></figure><p id="af3d6092-60b9-4ad6-b4d2-7828f7b2d51b" class="">Experiment :</p><p id="6ffd97d0-c49a-45af-a07c-72858f965716" class="">The paper uses Stable Diffusion -v2 and 256 x 256 Imagenet Diffusion model for experimentation.</p><figure id="b4cbf523-74b6-4468-afec-0d3518f0e74a" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%204.png"><img style="width:820px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%204.png"/></a><figcaption>                                                                                Table 1</figcaption></figure><p id="9f27df62-92f8-4e3b-abd5-cadbc5683437" class="">Table 1 presents the main results of evaluating watermark accuracy within both benign (normal) and adversarial (under attack) settings for two models: Stable Diffusion and ImageNet.</p><h3 id="48d31bce-5216-4504-9a32-daacb9b8efd0" class=""><strong>Table Overview:</strong></h3><ul id="620a50a7-fadf-481e-8bd8-cfdccb06e420" class="bulleted-list"><li style="list-style-type:disc"><strong>T@1%F</strong> stands for True Positive Rate (TPR) at 1% False Positive Rate (FPR), a statistical measure showing how often the watermark is correctly identified (true positive) while keeping the mistaken identification of non-watermarked images as watermarked (false positive) very low.</li></ul><ul id="ca110733-59a6-4416-ac3d-655466d194a5" class="bulleted-list"><li style="list-style-type:disc"><strong>AUC</strong>: Area Under the ROC Curve, which measures the model&#x27;s ability to distinguish between watermarked and non-watermarked images. A perfect score is 1.000, indicating flawless performance.</li></ul><ul id="2208aad2-6fd5-409f-b55f-90d4576484eb" class="bulleted-list"><li style="list-style-type:disc"><strong>FID</strong>: Frechet Inception Distance, a metric that compares the similarity of generated images to real ones—the lower, the better.</li></ul><ul id="aa6b117d-6eed-4efe-8a4a-dfbaf5da20b4" class="bulleted-list"><li style="list-style-type:disc"><strong>CLIP Score</strong>: A measure of the semantic relevance of the generated images to the text prompts used to create them—the higher, the better.</li></ul><h3 id="11d664af-f0ef-435f-b066-b196748a8cc8" class=""><strong>Explanation of the Results:</strong></h3><h3 id="f63ccb81-30d7-4c81-943d-f77f9799be0e" class=""><strong>For Stable Diffusion :</strong></h3><ul id="6eead99b-e922-4e80-9209-eea57b1d7968" class="bulleted-list"><li style="list-style-type:disc"><strong>DwtDct</strong>: Has an AUC of 0.974 in a clean setting, which drops significantly to 0.574 under adversarial conditions, indicating a decrease in watermark detection capability when the image is attacked or manipulated.</li></ul><ul id="a7aa1e88-07b6-4add-b06f-a7f625e4a730" class="bulleted-list"><li style="list-style-type:disc"><strong>DwtDctSvd</strong>: Shows perfect detection (AUC 1.000) in a clean environment, which is reduced to 0.702 in adversarial scenarios.</li></ul><ul id="24e00829-ab54-4d1f-a3ae-7068a4fe5647" class="bulleted-list"><li style="list-style-type:disc"><strong>RivaGAN</strong>: Another strong performer in both settings, with slight reductions in adversarial conditions.</li></ul><ul id="fd4cac62-2953-410c-a4bd-7b651e8e823e" class="bulleted-list"><li style="list-style-type:disc"><strong>Tree-Ring Methods</strong>: All have high scores in clean settings. Under attack, Tree-RingZeros shows slight vulnerability, while Tree-RingRings maintains high robustness. The watermark radius used is 10.</li></ul><h3 id="604d1ac7-966b-496f-8d7f-05b367c72b55" class=""><strong>For ImageNet :</strong></h3><ul id="ae1d8aa3-820d-4457-ac92-3fbaac71b42b" class="bulleted-list"><li style="list-style-type:disc">Similar patterns of results with the watermarking methods, except no CLIP Score is provided.</li></ul><p id="5304f648-d8cd-41bf-ba51-f55b60467d91" class="">
+</p><p id="392a09e2-e114-4b71-b0be-773f807594ec" class="">
+</p><p id="ed84db02-b4f5-404d-9565-201737ca8973" class="">
+</p><p id="de7bbbef-a4e1-407e-9940-49c1c2504a32" class="">
+</p><p id="1c31e20f-f077-4b69-89e5-38c7bbdfaf35" class="">
+</p><p id="b92a74bf-f2d7-4a8a-95b5-0bb92db3e7ff" class="">
+</p><figure id="0dff8b7c-2198-4783-a775-6736f081db8d" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%205.png"><img style="width:708px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%205.png"/></a><figcaption>                                                                                 Table 2</figcaption></figure><p id="e0baf704-6882-47a0-9615-1ff180860239" class="">Table 2 displays the effectiveness of different watermarking techniques (DwtDct, DwtDctSvd, RivaGAN, and Tree-Ring variants) under different types of image manipulations (attacks).</p><ul id="593ed188-4158-43a4-9c07-735b300eff12" class="bulleted-list"><li style="list-style-type:disc"><strong>Methods</strong>: These are the watermarking techniques being compared.</li></ul><ul id="02da73b6-764e-4d60-b143-6e4fa8678ca1" class="bulleted-list"><li style="list-style-type:disc"><strong>Clean</strong>: This column shows each method&#x27;s performance without any attack, with an ideal AUC close to 1.</li></ul><ul id="b2cdef72-9fc5-4301-b3eb-91bc82d9b8d5" class="bulleted-list"><li style="list-style-type:disc"><strong>Other Columns (Rotation, JPEG, Cr. &amp; Sc., Blurring, Noise, Color Jitter)</strong>: These show how each method handles various attacks. An AUC close to 1 indicates strong robustness against that type of attack.</li></ul><ul id="edf565b2-e0ee-445d-a0ca-d97db867b3f6" class="bulleted-list"><li style="list-style-type:disc"><strong>Avg (Average)</strong>: This is the average AUC over all types of attacks, giving an overall robustness score for each watermarking method. The Tree-RingRings method shows the highest average robustness.</li></ul><p id="ac5ec68e-5a21-470f-a2c6-a04523d62731" class="">Various terms refer to different types of image manipulations (or &quot;attacks&quot;) that the watermarked images might be subjected to, testing the robustness of the watermarking method. Here&#x27;s what each term means:</p><ol type="1" id="ccd54209-1737-4d19-9e40-7a934dec36df" class="numbered-list" start="1"><li><strong>JPEG</strong>: This column represents the effect of JPEG compression on the watermark&#x27;s detectability. JPEG is a common image compression method that reduces file size by slightly reducing image quality. It can potentially disrupt a watermark if the method is not robust, as compression changes the image&#x27;s pixel data.</li></ol><ol type="1" id="77c20d25-abb0-47f1-86fa-d6aeda6b0040" class="numbered-list" start="2"><li><strong>Cr. &amp; Sc.</strong>: This is an abbreviation for &quot;Cropping and Scaling.&quot; It tests how well the watermark can be detected after the image has been cropped (parts of the image are cut off) and scaled (the image is resized). Both operations can potentially remove or distort the watermark.</li></ol><ol type="1" id="d8465d50-77d9-4c7a-b32c-ecbcce9d5411" class="numbered-list" start="3"><li><strong>Blurring</strong>: This refers to the application of a blur filter to the image. Blurring can smooth out and merge the pixels, which might obscure a watermark. The specific type of blur isn&#x27;t mentioned, but common types include Gaussian blur or motion blur.</li></ol><ol type="1" id="18f5ef01-543f-47d2-a9ca-0ea467bc54a6" class="numbered-list" start="4"><li><strong>Noise</strong>: This manipulation involves adding random visual noise to the image, which can look like grain or speckles. The presence of noise can make it harder to detect watermarks because it adds extraneous information that could hide or disrupt the watermark&#x27;s pattern.</li></ol><ol type="1" id="a62a305c-7e4f-410a-82c2-e5925319d79b" class="numbered-list" start="5"><li><strong>Color Jitter</strong>: This manipulation alters the image&#x27;s colors by randomly changing the brightness, contrast, saturation, and hue. Like noise, color jitter can potentially hide or distort a watermark, challenging the watermark&#x27;s detectability.</li></ol><p id="a148bd21-459b-4c2a-b3f8-9d31cb910f24" class="">
+</p><figure id="6d457288-8919-4f41-af89-b1d2ad46ce76" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%206.png"><img style="width:417px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%206.png"/></a></figure><p id="a364e703-da25-4402-85f5-b2b6be0c787f" class="">This graph shows the impact of different watermark radii on the detection of watermarks and the quality of the images as measured by FID (Frechet Inception Distance).</p><ul id="d6c7abc8-bbba-4cc0-a40d-bfad70612f4d" class="bulleted-list"><li style="list-style-type:disc"><strong>AUC (Area Under the Curve)</strong>: This line (in pink) shows the overall performance of the watermark detection system across different radii. The closer the AUC is to 1, the better the system is at distinguishing between watermarked and non-watermarked images.</li></ul><ul id="cb19e045-7848-48cc-ac4d-169b35a74a04" class="bulleted-list"><li style="list-style-type:disc"><strong>TPR@1%FPR (True Positive Rate at 1% False Positive Rate)</strong>: This line (in blue) indicates the detection rate when only 1% of non-watermarked images are mistakenly identified as watermarked. Higher values are better, indicating that the system is accurately detecting watermarks without many false alarms.</li></ul><ul id="42f4e4b9-2d29-4b59-9acc-5dc53c419883" class="bulleted-list"><li style="list-style-type:disc"><strong>FID (Frechet Inception Distance)</strong>: The FID score (in yellow) measures the quality of generated images against a batch of real images. Lower FID scores indicate images that are more similar to real images, which is desirable. As the radius increases, FID scores worsen slightly, indicating that larger watermarks might slightly reduce image quality.</li></ul><p id="5c11ee75-f54d-438a-b5b5-353871c8dc42" class="">
+</p><figure id="961836a9-99e2-4615-b434-1f61867fbbd7" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%207.png"><img style="width:348px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%207.png"/></a></figure><p id="9d23770e-9fe2-4915-95ea-35491c05822b" class="">This graph shows the effect of different guidance scales on the performance of the watermark detection system.</p><ul id="0ba611bf-a10c-43bd-bbfd-29d30b681b8c" class="bulleted-list"><li style="list-style-type:disc"><strong>AUC and TPR@1%FPR</strong>: Both metrics remain relatively stable across the range of guidance scales tested, indicating that the watermarking system&#x27;s performance doesn&#x27;t significantly depend on how much the image generation sticks to the provided text prompt.</li></ul><p id="ab7b2992-bfd1-4817-8cd4-479649a6eb78" class="">
+</p><figure id="5adfd9dc-37f9-435e-87b0-c35f5d4308a4" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%208.png"><img style="width:481px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%208.png"/></a><figcaption>                                           Figure 5</figcaption></figure><p id="79623797-fc06-4760-90cc-a2a3047922ac" class="">Figure 5 is showing the results of an ablation study on how the number of steps used during the image generation (by diffusion models) and during watermark detection affects the ability to accurately detect the watermark.</p><p id="d29a8d13-2b42-41fc-9028-40d1979f8466" class="">The figure is presented as a heatmap, which is a graphical representation of data where individual values are represented as colors. Here&#x27;s the breakdown:</p><ul id="37d9767f-1c7e-4887-aba6-e92d919d1471" class="bulleted-list"><li style="list-style-type:disc"><strong>Vertical Axis (2^Generation-Time #Steps)</strong>: This represents the exponential number of steps used during the image generation process. The numbers 1, 2, 5, 10, 20, 50, 100, 200, 400, 800 correspond to 2 raised to the power of the number of steps, so they represent a rapidly increasing number of steps. The actual generation process of the image becomes more detailed as the number of steps increases.</li></ul><ul id="a4794a99-d320-43fe-99f9-199ad5737e3f" class="bulleted-list"><li style="list-style-type:disc"><strong>Horizontal Axis (Detection-Time #Steps)</strong>: This shows the number of steps used in the detection phase. When a watermark is detected, the diffusion process is essentially run in reverse, and this axis shows how many reverse steps are used in the watermark detection process.</li></ul><ul id="c2316dc1-78a0-48c4-9c26-214ee66a2632" class="bulleted-list"><li style="list-style-type:disc"><strong>Color Gradient (AUC)</strong>: The colors represent the Area Under the ROC Curve (AUC) for the watermark detection process, with green indicating higher values and red indicating lower values. A higher AUC value means better performance of the watermark detection system; it&#x27;s more capable of distinguishing between watermarked and non-watermarked images correctly.</li></ul><p id="05aa4183-4dee-4a42-ad74-ef8a61f97b3d" class="">The figure indicates that regardless of the number of steps used during image generation, the watermark detection system has high AUC values, especially when a moderate to high number of steps is used for detection. This suggests that the detection system can reliably identify watermarks even if the exact generation parameters are unknown.</p><p id="597d105d-a336-47e8-8e7c-ea3d90931a19" class="">
+</p><p id="40355a7a-1bfb-40e5-a200-58f7698334b8" class="">
+</p><div id="143e939d-205b-40be-84be-9a59903640af" class="column-list"><div id="50fefa3c-7807-435a-96c6-dce8f1ac63cc" style="width:50.000000000000014%" class="column"><figure id="2f7f571a-f879-48a5-842e-d3bf8e63d990" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%209.png"><img style="width:315px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%209.png"/></a></figure></div><div id="b422df78-63ba-4bce-b2b2-60be159a758d" style="width:50%" class="column"><h3 id="f8a91d84-564b-4952-9ec3-15a639051ee1" class=""><strong>(a) Rotation</strong></h3><p id="ebfb264f-e8f5-49d5-ad2d-bfbe31e2fd82" class="">This graph assesses the robustness of the watermark to various degrees of image rotation. The AUC and TPR@1%FPR scores remain high across all rotation degrees, indicating that the watermark remains detectable regardless of how much the image is rotated.</p></div></div><div id="c7981e88-61d5-423d-aab8-1261607b0640" class="column-list"><div id="8833f0e9-8afb-4236-a455-0d64d29ff35a" style="width:50%" class="column"><figure id="240552ce-80bc-42b5-9fb9-5431a842af66" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2010.png"><img style="width:259px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2010.png"/></a></figure></div><div id="2f640361-6df9-46a5-9f5d-3b4a2e9f08c3" style="width:50%" class="column"><h3 id="5a73bde0-b429-472e-8627-f82e9b81bfc1" class=""><strong>(b) JPEG Compression</strong></h3><p id="297c7dc9-2f0d-4de1-bf74-a5a9b2cb510a" class="">JPEG compression quality is varied from high (90) to low (10). The performance metrics decline as compression quality decreases, which is expected since lower quality could distort the watermark. However, even at significant compression, there’s still a reasonable level of detectability.</p></div></div><div id="1f2475cd-c15b-4742-b077-bbb7a29a8b81" class="column-list"><div id="6de459db-47dd-43a5-aab3-6f84eb3c335b" style="width:50%" class="column"><figure id="465c4fd0-2b67-45a0-ae8b-25030d41af8e" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2011.png"><img style="width:279px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2011.png"/></a></figure></div><div id="9c9dcdb1-39c7-4513-8cbd-2d383eb34867" style="width:50%" class="column"><h3 id="18be0275-b390-493d-8ec5-d914303c7b02" class=""><strong>(c) Cropping + Scaling</strong></h3><p id="f753a6aa-c41f-4330-bfdc-d1216e1a1877" class="">This shows the impact of cropping a certain percentage of the image combined with scaling. As the intensity of these changes increases, the ability to detect the watermark decreases. This makes sense because cropping and scaling can remove or distort parts of the watermark.</p></div></div><div id="92c764c4-fe8c-4321-9e4b-5d4b769957b7" class="column-list"><div id="5a684640-8899-4d9b-98c0-fede6c5c43bc" style="width:50%" class="column"><figure id="c63991e5-96de-4d83-9db3-7d7dd201edc1" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2012.png"><img style="width:286px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2012.png"/></a></figure></div><div id="4d6de5ef-ad75-43c1-807a-be56dbee6e4c" style="width:50%" class="column"><h3 id="fa439ec8-86ec-415f-88ae-ab4f66c6a241" class=""><strong>(d) Gaussian Blurring</strong></h3><p id="9863c8cc-aa02-41ba-b527-b1e49f056231" class="">Gaussian blur is applied with different kernel sizes. The watermarking system&#x27;s performance is unaffected by the increasing blur up to a kernel size of around 15. Beyond that, the watermark becomes more difficult to detect.</p></div></div><div id="bb8ab9fb-2e01-4ef3-8a23-09ad206d009a" class="column-list"><div id="2fe0a189-e7e0-4709-b742-e77427bcadb9" style="width:50%" class="column"><figure id="28b8cf4b-72b2-434f-abed-3a12171e6dca" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2013.png"><img style="width:263px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2013.png"/></a></figure></div><div id="edccb4ca-243e-4112-8eae-3e5c6f517285" style="width:50%" class="column"><h3 id="7f92b2cf-67ba-4be0-bee9-4eba87211dd7" class=""><strong>(e) Gaussian Noise</strong></h3><p id="f984031f-077d-410f-9997-ef39bb7d18bc" class="">The graph displays how adding Gaussian noise with increasing standard deviation (std) impacts watermark detection. The robustness to noise is significant up to a std of about 0.15, after which the watermark detection capability drops sharply.</p></div></div><div id="eeb70197-0d0a-42b4-929b-d588fc605820" class="column-list"><div id="ee8e9b10-816b-49ff-bc8f-45c3d61193b6" style="width:50%" class="column"><figure id="bca10366-6eb2-473f-999e-0b7d56a0ba67" class="image"><a href="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2014.png"><img style="width:285px" src="Decoding%20Tree-Ring%20Watermarking%20Nature&#x27;s%20Fingerpri%20dedd6abec3514ae1859f5192760f6f4a/Untitled%2014.png"/></a></figure></div><div id="a12294c8-6b4f-49b6-8204-ca99dc0bee32" style="width:50%" class="column"><h3 id="aef4a9dc-016c-4bdc-8457-a216dcd97ef6" class=""><strong>(f) Color Jitter</strong></h3><p id="cf0b901a-5a00-4d0e-9cf1-ec73b130491b" class="">As the brightness factor increases, representing more severe color jitter, the ability to detect the watermark decreases. Still, the system shows a degree of robustness up to a factor of about 8.</p></div></div><h3 id="8de936a7-1446-4902-9447-31da923aa210" class="">References:</h3><p id="36847c2d-24c1-4934-bb6c-05c267546fd4" class=""><a href="https://homepages.inf.ed.ac.uk/rbf/HIPR2/fourier.htm">https://homepages.inf.ed.ac.uk/rbf/HIPR2/fourier.htm</a></p><p id="36d90881-33a1-4759-bba2-1dd12d115899" class=""><a href="https://en.wikipedia.org/wiki/Frequency_domain">https://en.wikipedia.org/wiki/Frequency_domain</a></p><p id="58a90fb1-61a3-42f8-a231-1e0a82eebf55" class=""><a href="https://arxiv.org/pdf/2305.20030v3">Tree-Rings Watermarks: Invisible Fingerprints for Diffusion Images (arxiv.org)</a></p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
