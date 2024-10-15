@@ -3,9 +3,9 @@ source "https://rubygems.org"
 gem 'jekyll', '~> 4.3.3'
 # GitHub Pages gem (includes Jekyll and other plugins)
 gem "github-pages", group: :jekyll_plugins
-gem 'bundler'
+gem 'bundler', '~> 2.5.15'
 gem 'faraday-retry'
-gem 'backports'
+gem 'backports', '~> 3.25.0'
 gem 'kramdown'
 gem 'puma'
 gem 'csv'
@@ -21,26 +21,26 @@ gem 'base64'
 
 # Plugins
 group :jekyll_plugins do
-    # gem 'devlopr'
-    gem 'jgd'
-    gem 'jekyll-feed'
-    gem 'jekyll-paginate'
-    gem 'jekyll-gist'
-    gem 'jekyll-seo-tag'
-    gem 'jekyll-sitemap'
+    # gem 'devlopr', '~> 0.4.5'
+    gem 'jgd', '~> 1.14.0'
+    gem 'jekyll-feed', '~> 0.17.0'
+    gem 'jekyll-paginate', '~> 1.1.0'
+    gem 'jekyll-gist', '~> 1.5.0'
+    gem 'jekyll-seo-tag', '~> 2.8.0'
+    gem 'jekyll-sitemap', '~> 1.4.0'
 
-    # gem 'jekyll-admin',
+    # gem 'jekyll-admin', '~> 0.11.1'
 end
 
 
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
 # and associated library.
 install_if -> { RUBY_PLATFORM =~ %r!mingw|mswin|java! } do
-  gem "tzinfo"
+  gem "tzinfo", "~> 2.0"
   gem "tzinfo-data"
 end
 
 # Performance-booster for watching directories on Windows
-gem "wdm", install_if => Gem.win_platform?
-gem "webrick"
-gem "ffi"
+gem "wdm", "~> 0.2.0", :install_if => Gem.win_platform?
+gem "webrick", "~> 1.8"
+gem "ffi", "~> 1.17.0"
