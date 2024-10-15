@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-# gem 'jekyll', '~> 4.3.4'
+gem 'jekyll', '~> 4.3.3'
 # GitHub Pages gem (includes Jekyll and other plugins)
 gem "github-pages", group: :jekyll_plugins
 gem 'bundler'
