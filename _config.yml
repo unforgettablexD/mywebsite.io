@@ -3,7 +3,7 @@ subtitle: AI Intern
 description: >- # this means to ignore newlines until "baseurl:"
  Arnav's personal website
 
-url: "http://kumararnav.com" # the base hostname & protocol for your site, e.g. https://example.github.io
+url: "https://kumararnav.com" # the base hostname & protocol for your site, e.g. https://example.github.io
 baseurl: "" # the subpath of your site, e.g. /blog
 
 # Navigation
