@@ -1,6 +1,8 @@
 source "https://rubygems.org"
 
-gem 'jekyll', '~> 4.3.4'
+# gem 'jekyll', '~> 4.3.4'
+# GitHub Pages gem (includes Jekyll and other plugins)
+gem "github-pages", group: :jekyll_plugins
 gem 'bundler', '~> 2.5.15'
 gem 'faraday-retry'
 gem 'backports', '~> 3.25.0'
