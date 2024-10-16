@@ -137,22 +137,3 @@ Protecting deep learning models is no longer a luxury—it's a necessity. Our ro
 As AI continues to advance, so too must our methods for protecting it. Stay tuned for more updates and breakthroughs in the realm of AI security!
 
 ---
-
-*Have thoughts or questions about AI watermarking? Drop them in the comments below! Let's secure the future of AI together.*
-
-# Resources and Further Reading
-
-- **PyTorch**: [https://pytorch.org/](https://pytorch.org/)
-- **Diffusers Library**: [https://github.com/huggingface/diffusers](https://github.com/huggingface/diffusers)
-- **DEAP Library**: [https://github.com/DEAP/deap](https://github.com/DEAP/deap)
-- **Reed-Solomon Codes**: [Wikipedia](https://en.wikipedia.org/wiki/Reed–Solomon_error_correction)
-- **StegaStamp Paper**: [Link to the paper if available]
-- **Hugging Face Documentation**: [https://huggingface.co/docs](https://huggingface.co/docs)
-- **Torch Pruning Documentation**: [https://pytorch.org/docs/stable/nn.utils.prune.html](https://pytorch.org/docs/stable/nn.utils.prune.html)
-- **Genetic Algorithms: Theory and Applications**: Comprehensive resources on genetic algorithms.
-- **NumPy Documentation**: [https://numpy.org/doc/](https://numpy.org/doc/)
-- **ReedSolo Library**: [https://pypi.org/project/reedsolo/](https://pypi.org/project/reedsolo/)
-
----
-
-*Disclaimer: This blog post is based on a comprehensive project report and aims to provide an accessible overview of advanced watermarking techniques in deep learning. For detailed methodologies and technical implementations, refer to the full project documentation.*
